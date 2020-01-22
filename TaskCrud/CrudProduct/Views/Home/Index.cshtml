@@ -1,0 +1,78 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<script src="~/js/jquery.min.js"></script>
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        Get Api Data
+    </div>
+
+    <div class="panel-body">
+        <table class="table table-bordered" id="Table">
+            <tr>
+                <td>Id</td>
+                <td>Name</td>
+                <td>Description</td>
+                <td>DescriptionEng</td>
+                <td>Price</td>
+            </tr>
+        </table>
+       
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        Manager.GetAllProducts();
+        settings.GetAllProducts();
+
+    });
+
+    var Manager = {
+        GetAllProducts: function () {
+            var obj;
+            var serviceUrl = "https://localhost:44379/api/products/GetAll";
+            window.Manager.GetAPI(serviceUrl, onSucces, onFailed);
+            function onSucces(jsonData) {
+                obj = jsonData;
+                $.each(jsonData, function (i, item) {
+
+                    var rows = "<tr>" +
+                        "<td id='Id'>" + item.id + "</td>" +
+                        "<td id='Name'>" + item.name + "</td>" +
+                        "<td id='Description'>" + item.description + "</td>" +
+                        "<td id='DescriptionEng'>" + item.descriptionEng  + "</td>" +
+                        "<td id='Price'>" + item.price + "</td>" +
+                        "</tr>";
+                    $('#Table').append(rows);
+
+                });
+            }
+            function onFailed(error) {
+                window.alert(error.statusText);
+            }
+        },
+
+        GetAPI: function (serviceUrl, successCallback, errorCallback) {
+            $.ajax({
+                type: "GET",
+                url: serviceUrl,
+                dataType: "json",
+                success: successCallback,
+                error: errorCallback
+
+            });
+        },
+
+    };
+
+</script>
